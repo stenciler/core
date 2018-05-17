@@ -22,16 +22,20 @@ class Render {
 			'_container_template' => 'standard',
 			'_article_template' => 'standard',
 			'_static_template' => null,
+			'_collection_title' => null,
+			'_collection_description' => null,
 			'_collection_template' => 'standard',
 			'_item_template' => 'standard',
-			'_collection_pagination' => true,
-			'_collection_navigation' => true,
-			'_collection_filter' => true,
-			'_collection_column' => 1,
-			'_query_post_type' => 'post',
-			'_query_taxonomies' => [],
-			'_query_posts_per_page' => 10,
-			'_query_sort' => 'ASC'
+			'_pagination' => true,
+			'_navigation' => true,
+			'_filter' => true,
+			'_column' => 1,
+			'_post_type' => 'post',
+			'_taxonomies' => [],
+			'_posts_per_page' => 10,
+			'_order_by' => 'ID',
+			'_order_by_value' => null,
+			'_order' => 'ASC'
 		];
 		$options = [];
 		foreach ($configs as $field_id => $value) {
@@ -51,18 +55,8 @@ class Render {
 
 	public function render() {
 		
-		$args = [
-			'_item_template' => $this->config()['_item_template'],
-			'with_pagination' => $this->config()['_collection_pagination'],
-			'with_filter' => $this->config()['_collection_filter'],
-			'with_navigation' => $this->config()['_collection_navigation'],
-			'_column' => $this->config()['_collection_column'],
-			'post_type' => $this->config()['_query_post_type'],
-			'taxonomies' => $this->config()['_query_taxonomies'],
-			'posts_per_page' => $this->config()['_query_posts_per_page'],
-			'sort' => $this->config()['_query_sort']
-		];
-	
+		$args = $this->config();
+
 
 
 		$header_design = $this->config()['_header_template'];
@@ -89,10 +83,74 @@ class Render {
 			break;
 		}
 		echo $header->render();
+		echo $this->cover();
 		echo $container->render([
 			'content' => $main->render($args)
 		]);
 		echo $footer->render();
+	}
+
+	public function cover() {
+		global $post;
+		$cover_type = get_post_meta($post->ID, '_cover_type', true);
+		$cover_url = get_post_meta($post->ID, '_cover_url', true);
+		$cover_content = get_post_meta($post->ID, '_cover_content', true);
+		$cover_opacity = get_post_meta($post->ID, '_cover_opacity', true);
+		$cover_overlay = get_post_meta($post->ID, '_cover_overlay', true);
+		?>
+		<?php if($cover_type) { ?>
+		<section class="ux-cover <?php echo $cover_overlay; ?> <?php echo $cover_opacity; ?>" >
+			<?php do_action('stencil/_cover_start'); ?>
+			<?php 
+			if($cover_type === 'image') 
+			{
+				if(false == $cover_url) {
+					$cover_url = get_stylesheet_directory_uri().'/assets/img/header.jpg';
+				} 
+				?> 
+				<div class="embed parallax">
+					<img src="<?php echo $cover_url; ?>" />
+				</div>
+				<?php 
+			}  
+			?>
+			<?php 
+			if($cover_type === 'video') 
+			{ 
+				?> 
+				<div class="embed parallax">
+					<iframe  src="<?php echo $cover_url; ?>?autoplay=1&mute=1&enablejsapi=1" frameborder="0"></iframe>
+				</div>
+				<?php 
+			}  
+			?>
+			<?php 
+			if($cover_type === 'map') 
+			{ 
+				?> 
+				<div class="embed parallax">
+					<iframe src="<?php echo $cover_url; ?>" frameborder="0" style="border:0" allowfullscreen></iframe>
+				</div>
+				<?php 
+			}  
+			?>
+			<?php 
+			if($cover_type === 'slideshow') 
+			{ 
+				?> 
+
+
+				<?php 
+			}  
+			?>
+			<div class="container">
+				<?php do_action('stencil/_cover_content_start'); ?>
+				<?php echo $cover_content; ?>
+				<?php do_action( 'stencil/_cover_content_end' ); ?>
+			</div>
+			<?php do_action('stencil/_cover_end'); ?>
+		</section>
+		<?php }
 	}
 
 

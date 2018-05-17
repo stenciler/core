@@ -40,10 +40,7 @@ stencil()->template('article', [
 	'template' => 'article/canvas.php'
 ]);
 
-stencil()->template('static', [
-	'name' => 'standard',
-	'template' => 'static/standard.php'
-]);
+
 
 
 
@@ -108,18 +105,40 @@ stencil()->model(
 			],
 			[
 				'type' => 'file_input',
-				'name' => 'Cover URL',
+				'name' => 'Cover URL/File',
 				'id'   => '_cover_url'
 			],
 			[
 				'type' => 'select',
-				'name' => 'Cover Color',
+				'name' => 'Overlay Color',
 				'id'   => '_cover_overlay',
 				'options' => [
 					'' => 'None',
 					'overlay-dark' => 'Dark',
 					'overlay-light' => 'Light'
 				]
+			],
+			[
+				'type' => 'select',
+				'name' => 'Overlay Opacity',
+				'id'   => '_cover_opacity',
+				'options' => [
+					'' => 'Standard',
+					'overlay-10' => '10',
+					'overlay-20' => '20',
+					'overlay-30' => '30',
+					'overlay-40' => '40',
+					'overlay-50' => '50',
+					'overlay-60' => '60',
+					'overlay-70' => '70',
+					'overlay-90' => '90',
+					'overlay-100' => '100'
+				]
+			],
+			[
+				'type' => 'textarea',
+				'name' => 'Content',
+				'id'   => '_cover_content'
 			]
 		]
 	]
@@ -137,8 +156,7 @@ stencil()->model(
 					'' 		=> 'None',
 					'image' => 'Image',
 					'video' => 'Video',
-					'map' => 'Map',
-					'slideshow' => 'Slideshow(*)',
+					'map' => 'Map'
 				]
 			],
 			[
@@ -158,24 +176,24 @@ stencil()->model(
 			],
 			[
 				'type' => 'select',
-				'name' => 'Overlay Level',
-				'id'   => '_cover_level',
+				'name' => 'Overlay Opacity',
+				'id'   => '_cover_opacity',
 				'options' => [
 					'' => 'Standard',
-					'10' => '10',
-					'20' => '20',
-					'30' => '30',
-					'40' => '40',
-					'50' => '50',
-					'60' => '60',
-					'70' => '70',
-					'90' => '90',
-					'90' => '90'
+					'overlay-10' => '10',
+					'overlay-20' => '20',
+					'overlay-30' => '30',
+					'overlay-40' => '40',
+					'overlay-50' => '50',
+					'overlay-60' => '60',
+					'overlay-70' => '70',
+					'overlay-90' => '90',
+					'overlay-100' => '100'
 				]
 			],
 			[
-				'type' => 'wysiwyg',
-				'name' => 'Hero Content',
+				'type' => 'textarea',
+				'name' => 'Content',
 				'id'   => '_cover_content'
 			]
 		]

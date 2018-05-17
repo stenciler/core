@@ -16,7 +16,45 @@ class Posts {
 
 	public function posts($template, $args = []) {
 		global $paged, $wp_query;
-
+		$args = array_merge(
+			[
+				'_keyword' => null,
+				'_post_type' => 'post',
+				'_posts_per_page' => 3,
+				'_order_by' => 'ID',
+				'_order_by_value' => null,
+				'_order' => 'ASC',
+				'_taxonomies' => [],
+				'_pagination' => false,
+				'_filter' => false,
+				'_navigation' => false,
+				'_column' => 1
+			],
+			$args
+		);
+		$taxonomies = get_object_taxonomies($args['post_type']);
+		$filters = [];
+		foreach ($taxonomies as $key => $tax) {
+			$terms = get_terms( array(
+				'taxonomy' => $tax,
+				'hide_empty' => false,
+			));
+			if(count($terms) > 0) {
+				$options = [];
+				foreach ($terms as $key => $term) {
+					$options[$term->term_id] = $term->name;
+				}
+				$filters[$tax] = [
+					'label' => __($tax.'_filter_label', 'stencil'),
+					'options' => $options
+				];
+			}
+		}
+		$filters['order'] = [
+			'asc' => 'ASC',
+			'desc' => 'DESC'
+		];
+		$args['filters'] =  $filters;
 		$column = 1;
 		if(isset($args['_column'])) {
 			$column = $args['_column'];
@@ -24,35 +62,54 @@ class Posts {
 
 		$x = 12%$column;
 		$args['_row_class'] = 'row';
-		$args['_column_class'] = 'col-md-12';
+		$args['_column_class'] = 'column col-md-12';
 		if(0 == 12%$column) {
-			$args['_column_class'] = 'col-md-'.(12/$column);
+			$args['_column_class'] = 'column col-md-'.(12/$column);
 		}
 
+		$query_args = [];
+		
+		$query_args['post_type'] = $args['post_type'];
+		$query_args['posts_per_page'] = $args['posts_per_page'];
 
+		if($args['order_by'] === 'meta_value') {
 
-		$query_args = [
-			'post_type' => 'post',
-			'posts_per_page' => 6
-		];
-		if(isset($args['post_type'])) {
-			$query_args['post_type'] = $args['post_type'];
+		} else {
+			$query_args['orderby'] = $args['order_by'];
+			$query_args['order'] = $args['order'];
 		}
-		if(isset($args['posts_per_page'])) {
-			//$query_args['posts_per_page'] = $args['posts_per_page'];
-		}
+
 
 		$wp_query = new \WP_Query($query_args);
 		$output = '';
 		ob_start();
 		$data = [];
-		if ($wp_query->have_posts() ) :
+		if ($wp_query->have_posts())  {
+			if($args['_filter']) {
+				echo $this->render_filter($args);
+			}
 			echo $this->engine->render($template, $args);
-		else :
-		endif;
+
+
+			if($args['_pagination']) {
+				echo $this->render_pagination($args);
+			}
+
+
+		} else {
+
+
+		}
 		$output .= ob_get_clean();
 		wp_reset_postdata();
 		return $output;
+	}
+
+	public function render_filter($args) {
+
+	}
+	public function render_pagination($args) {
+
 	}
 
 	public function loop($template, $args = []) {

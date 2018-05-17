@@ -176,22 +176,22 @@ class Template {
 			],
 			[
 				'name' => 'Pagination',
-				'id' => '_collection_pagination',
+				'id' => '_pagination',
 				'type' => 'checkbox'
 			],
 			[
 				'name' => 'Filter',
-				'id' => '_collection_filter',
+				'id' => '_filter',
 				'type' => 'checkbox'
 			],
 			[
 				'name' => 'Navigation',
-				'id' => '_collection_navigation',
+				'id' => '_navigation',
 				'type' => 'checkbox'
 			],
 			[
 				'name' => 'Column',
-				'id' => '_collection_column',
+				'id' => '_column',
 				'type' => 'text'
 			],
 			[
@@ -200,12 +200,12 @@ class Template {
 			],
 			[
 				'name' => 'Post Per Page',
-				'id' => '_query_posts_per_page',
+				'id' => '_posts_per_page',
 				'type' => 'text'
 			],
 			[
-				'name' => 'Sort',
-				'id' => '_query_sort',
+				'name' => 'Order',
+				'id' => '_order',
 				'type' => 'select',
 				'options' => [ 
 					'ASC' => 'ASC',

@@ -80,7 +80,7 @@ class Template {
 				'options' => [ 
 					'' => 'Select'
 				],
-				'data_parser' => 'designs_content'
+				'data_parser' => 'designs_article'
 			],
 			[
 				'condition' => [
@@ -95,6 +95,26 @@ class Template {
 					'' => 'Select'
 				],
 				'data_parser' => 'designs_static'
+			],
+			[
+				'condition' => [
+					'type' => 'combo',
+					'parent' => '_template_type',
+					'value' => 'collection'
+				],
+				'name' => 'Title',
+				'id' => '_collection_title',
+				'type' => 'text'
+			],
+			[
+				'condition' => [
+					'type' => 'combo',
+					'parent' => '_template_type',
+					'value' => 'collection'
+				],
+				'name' => 'Description',
+				'id' => '_collection_description',
+				'type' => 'textarea'
 			],
 			[
 				'condition' => [
@@ -131,7 +151,7 @@ class Template {
 					'value' => 'collection'
 				],
 				'name' => 'Pagination',
-				'id' => '_collection_pagination',
+				'id' => '_pagination',
 				'type' => 'checkbox'
 			],
 			[
@@ -141,7 +161,7 @@ class Template {
 					'value' => 'collection'
 				],
 				'name' => 'Filter',
-				'id' => '_collection_filter',
+				'id' => '_filter',
 				'type' => 'checkbox'
 			],
 			[
@@ -151,7 +171,7 @@ class Template {
 					'value' => 'collection'
 				],
 				'name' => 'Navigation',
-				'id' => '_collection_navigation',
+				'id' => '_navigation',
 				'type' => 'checkbox'
 			],
 			[
@@ -161,7 +181,7 @@ class Template {
 					'value' => 'collection'
 				],
 				'name' => 'Column',
-				'id' => '_collection_column',
+				'id' => '_column',
 				'type' => 'text'
 			],
 			[
@@ -180,7 +200,7 @@ class Template {
 					'value' => 'collection'
 				],
 				'name' => 'Post Type',
-				'id' => '_query_post_type',
+				'id' => '_post_type',
 				'type' => 'text'
 			],
 			[
@@ -199,7 +219,7 @@ class Template {
 					'value' => 'collection'
 				],
 				'name' => 'Taxonomies',
-				'id' => '_query_taxonomies',
+				'id' => '_taxonomies',
 				'type' => 'text'
 			],
 			[
@@ -209,7 +229,7 @@ class Template {
 					'value' => 'collection'
 				],
 				'name' => 'Post Per Page',
-				'id' => '_query_posts_per_page',
+				'id' => '_posts_per_page',
 				'type' => 'text'
 			],
 			[
@@ -219,7 +239,7 @@ class Template {
 					'value' => 'collection'
 				],
 				'name' => 'Order By',
-				'id' => '_query_order_by',
+				'id' => '_order_by',
 				'type' => 'select',
 				'options' => [ 
 					'' => 'Select',
@@ -236,11 +256,11 @@ class Template {
 			[
 				'condition' => [
 					'type' => 'combo',
-					'parent' => '_query_order_by',
+					'parent' => '_order_by',
 					'value' => 'meta_value'
 				],
 				'name' => 'Order Meta Key',
-				'id' => '_query_order_meta_key',
+				'id' => '_order_by_value',
 				'type' => 'text'
 			],
 			[
@@ -249,8 +269,8 @@ class Template {
 					'parent' => '_template_type',
 					'value' => 'collection'
 				],
-				'name' => 'Sort',
-				'id' => '_query_sort',
+				'name' => 'Order',
+				'id' => '_order',
 				'type' => 'select',
 				'options' => [ 
 					'ASC' => 'ASC',
