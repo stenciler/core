@@ -242,7 +242,6 @@ class Template {
 				'id' => '_order_by',
 				'type' => 'select',
 				'options' => [ 
-					'' => 'Select',
 					'id' => 'ID',
 					'author' => 'author',
 					'title' => 'title',
@@ -260,6 +259,16 @@ class Template {
 					'value' => 'meta_value'
 				],
 				'name' => 'Order Meta Key',
+				'id' => '_order_meta_key',
+				'type' => 'text'
+			],
+			[
+				'condition' => [
+					'type' => 'combo',
+					'parent' => '_order_by',
+					'value' => 'meta_value'
+				],
+				'name' => 'Order Meta Value',
 				'id' => '_order_by_value',
 				'type' => 'text'
 			],
@@ -310,7 +319,7 @@ class Template {
 				'data_parser' => 'designs_container'
 			],
 			[
-			
+				
 				'name' => 'Template',
 				'id' => '_article_template',
 				'type' => 'select',

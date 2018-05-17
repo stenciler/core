@@ -16,12 +16,16 @@ class Posts {
 
 	public function posts($template, $args = []) {
 		global $paged, $wp_query;
+
+		$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+
 		$args = array_merge(
 			[
 				'_keyword' => null,
 				'_post_type' => 'post',
 				'_posts_per_page' => 3,
 				'_order_by' => 'ID',
+				'_order_meta_key' => null,
 				'_order_by_value' => null,
 				'_order' => 'ASC',
 				'_taxonomies' => [],
@@ -32,7 +36,7 @@ class Posts {
 			],
 			$args
 		);
-		$taxonomies = get_object_taxonomies($args['post_type']);
+		$taxonomies = get_object_taxonomies($args['_post_type']);
 		$filters = [];
 		foreach ($taxonomies as $key => $tax) {
 			$terms = get_terms( array(
@@ -68,16 +72,26 @@ class Posts {
 		}
 
 		$query_args = [];
-		
-		$query_args['post_type'] = $args['post_type'];
-		$query_args['posts_per_page'] = $args['posts_per_page'];
+		$query_args['post_type'] = $args['_post_type'];
+		$query_args['posts_per_page'] = $args['_posts_per_page'];
 
-		if($args['order_by'] === 'meta_value') {
+		$tax_query = [];
+		if(null !== $terms = $args['_taxonomies']) {
+			
+		}
+
+		if(null !== $keyword = $args['_keyword']) {
+			$query_args['s'] = $keyword;
+
+		}
+
+		if($args['_order_by'] === 'meta_value') {
 
 		} else {
-			$query_args['orderby'] = $args['order_by'];
-			$query_args['order'] = $args['order'];
+			$query_args['orderby'] = $args['_order_by'];
+			$query_args['order'] = $args['_order'];
 		}
+		$query_args['paged'] = $paged;
 
 
 		$wp_query = new \WP_Query($query_args);
@@ -85,17 +99,7 @@ class Posts {
 		ob_start();
 		$data = [];
 		if ($wp_query->have_posts())  {
-			if($args['_filter']) {
-				echo $this->render_filter($args);
-			}
 			echo $this->engine->render($template, $args);
-
-
-			if($args['_pagination']) {
-				echo $this->render_pagination($args);
-			}
-
-
 		} else {
 
 
