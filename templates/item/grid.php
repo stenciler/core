@@ -1,4 +1,4 @@
-<div class="ux-item item_list">
+<div class="item item_list">
 	<div class="embed-holder">
 		<div class="embed">
 			{{#post_thumbnail}}{{/post_thumbnail}}

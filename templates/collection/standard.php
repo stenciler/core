@@ -1,5 +1,6 @@
 {{#posts}}
-<div class="ux-collection">
+<div class="collection">
+	{{#posts_filter}}{{/posts_filter}}
 	<div class="{{_row_class}}">
 		{{#posts_loop}}
 		<div class="{{_column_class}}">

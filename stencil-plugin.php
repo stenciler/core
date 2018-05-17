@@ -9,7 +9,7 @@
 * Author URI: http://www.olla.io/stencil
 * Text Domain: stencil
 * Domain Path: /assets/langs/
-* GitHub Plugin URI: https://github.com/stenciler/core
+* GitHub Plugin URI: https://github.com/stenciler/stencil-plugin
 */
 
 

@@ -102,6 +102,16 @@ class Template {
 					'parent' => '_template_type',
 					'value' => 'collection'
 				],
+				'name' => 'Query ID',
+				'id' => '_query_id',
+				'type' => 'text'
+			],
+			[
+				'condition' => [
+					'type' => 'combo',
+					'parent' => '_template_type',
+					'value' => 'collection'
+				],
 				'name' => 'Title',
 				'id' => '_collection_title',
 				'type' => 'text'

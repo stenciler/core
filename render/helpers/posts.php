@@ -16,11 +16,10 @@ class Posts {
 
 	public function posts($template, $args = []) {
 		global $paged, $wp_query;
-
 		$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-
 		$args = array_merge(
 			[
+				'_query_id' => null,
 				'_keyword' => null,
 				'_post_type' => 'post',
 				'_posts_per_page' => 3,
@@ -94,6 +93,11 @@ class Posts {
 		$query_args['paged'] = $paged;
 
 
+		$query_filter  = apply_filters('stencil/query_'.$args['_query_id'], []);
+
+		
+		$query_args =  array_merge($query_args, $query_filter);
+
 		$wp_query = new \WP_Query($query_args);
 		$output = '';
 		ob_start();
@@ -109,12 +113,6 @@ class Posts {
 		return $output;
 	}
 
-	public function render_filter($args) {
-
-	}
-	public function render_pagination($args) {
-
-	}
 
 	public function loop($template, $args = []) {
 		global $wp_query;
@@ -143,63 +141,75 @@ class Posts {
 
 	
 	public function pagination($template, $args) {
-		global $paged, $wp_query;
-
-		$total_posts = $wp_query->found_posts;
 		
-		if($paged === 0) {
-			$paged = 1;
-		}
 
-		$posts_per_page = 1;
-		if(isset($args['posts_per_page'])) {
-			//$posts_per_page = $args['posts_per_page'];
-		}
-
-		$pages = round($wp_query->found_posts/$posts_per_page);
-
-
-		$range = 1;
-		$output = '';
-		ob_start();
-		$showitems = ($range * 2) + 1;  
-
-
-		if(1 != $pages)
-		{
-			echo '<nav aria-label="Page navigation" role="navigation">';
-			echo '<span class="sr-only">Page navigation</span>';
-			echo '<ul class="pagination justify-content-center ft-wpbs">';
-
-			echo '<li class="page-item disabled hidden-md-down d-none d-lg-block"><span class="page-link">Page '.$paged.' of '.$pages.'</span></li>';
-
-			if($paged > 2 && $paged > $range+1 && $showitems < $pages) 
-				echo '<li class="page-item"><a class="page-link" href="'.get_pagenum_link(1).'" aria-label="First Page">&laquo;<span class="hidden-sm-down "> First</span></a></li>';
-
-			if($paged > 1 && $showitems < $pages) 
-				echo '<li class="page-item"><a class="page-link" href="'.get_pagenum_link($paged - 1).'" aria-label="Previous Page">&lsaquo;<span class="hidden-sm-down"> Previous</span></a></li>';
-
-			for ($i=1; $i <= $pages; $i++)
-			{
-				if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) || $pages <= $showitems ))
-					echo ($paged == $i)? '<li class="page-item active"><span class="page-link"><span class="sr-only">Current Page </span>'.$i.'</span></li>' : '<li class="page-item"><a class="page-link" href="'.get_pagenum_link($i).'"><span class="sr-only">Page </span>'.$i.'</a></li>';
+		if(isset($args['_pagination']) && null !== $args['_pagination']) {
+			global $paged, $wp_query;
+			$total_posts = $wp_query->found_posts;
+			if($paged === 0) {
+				$paged = 1;
 			}
 
-			if ($paged < $pages && $showitems < $pages) 
-				echo '<li class="page-item"><a class="page-link" href="'.get_pagenum_link($paged + 1).'" aria-label="Next Page"><span class="hidden-sm-down">Next </span>&rsaquo;</a></li>';  
+			$posts_per_page = 1;
+			if(isset($args['_posts_per_page'])) {
+				$posts_per_page = $args['_posts_per_page'];
+			}
+			$pages = round($wp_query->found_posts/$posts_per_page);
 
-			if ($paged < $pages-1 &&  $paged+$range-1 < $pages && $showitems < $pages) 
-				echo '<li class="page-item"><a class="page-link" href="'.get_pagenum_link($pages).'" aria-label="Last Page"><span class="hidden-sm-down">Last </span>&raquo;</a></li>';
+			$range = 1;
+			$output = '';
+			ob_start();
+			$showitems = ($range * 2) + 1;  
 
-			echo '</ul>';
-			echo '</nav>';
+			if(1 != $pages)
+			{
+				echo '<nav aria-label="Page navigation" role="navigation">';
+				echo '<span class="sr-only">Page navigation</span>';
+				echo '<ul class="pagination justify-content-center ft-wpbs">';
+
+				echo '<li class="page-item disabled hidden-md-down d-none d-lg-block"><span class="page-link">Page '.$paged.' of '.$pages.'</span></li>';
+
+				if($paged > 2 && $paged > $range+1 && $showitems < $pages) 
+					echo '<li class="page-item"><a class="page-link" href="'.get_pagenum_link(1).'" aria-label="First Page">&laquo;<span class="hidden-sm-down "> First</span></a></li>';
+
+				if($paged > 1 && $showitems < $pages) 
+					echo '<li class="page-item"><a class="page-link" href="'.get_pagenum_link($paged - 1).'" aria-label="Previous Page">&lsaquo;<span class="hidden-sm-down"> Previous</span></a></li>';
+
+				for ($i=1; $i <= $pages; $i++)
+				{
+					if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) || $pages <= $showitems ))
+						echo ($paged == $i)? '<li class="page-item active"><span class="page-link"><span class="sr-only">Current Page </span>'.$i.'</span></li>' : '<li class="page-item"><a class="page-link" href="'.get_pagenum_link($i).'"><span class="sr-only">Page </span>'.$i.'</a></li>';
+				}
+
+				if ($paged < $pages && $showitems < $pages) 
+					echo '<li class="page-item"><a class="page-link" href="'.get_pagenum_link($paged + 1).'" aria-label="Next Page"><span class="hidden-sm-down">Next </span>&rsaquo;</a></li>';  
+
+				if ($paged < $pages-1 &&  $paged+$range-1 < $pages && $showitems < $pages) 
+					echo '<li class="page-item"><a class="page-link" href="'.get_pagenum_link($pages).'" aria-label="Last Page"><span class="hidden-sm-down">Last </span>&raquo;</a></li>';
+
+				echo '</ul>';
+				echo '</nav>';
+			}
+			$output .= ob_get_clean();
+			return $output;
+			
 		}
+	}
+
+	public function filter($template, $args) {
+		if(isset($args['_filter']) && null !== $args['_filter']) {
+		$output = '';
+		ob_start();
+		?>
+		<div class="filter">
+			<?php do_action('stencil/posts_filter_start_'.$args['_query_id']); ?>
+			<div class="title"><?php echo $args['_collection_title']; ?></div>
+			<?php do_action('stencil/posts_filter_end_'.$args['_query_id']); ?>
+		</div> 
+		<?php
 		$output .= ob_get_clean();
 		return $output;
 	}
-
-	public function filter() {
-
 	}
 	/******************************
 	*

@@ -1,3 +1,3 @@
-<div class="ux-collection">
+<div class="collection">
 	{{{children}}}
 </div>

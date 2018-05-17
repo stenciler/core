@@ -30,11 +30,14 @@ class Render {
 			'_navigation' => true,
 			'_filter' => true,
 			'_column' => 1,
+			'_query_id' => null,
 			'_post_type' => 'post',
 			'_taxonomies' => [],
 			'_posts_per_page' => 10,
 			'_order_by' => 'ID',
-			'_order_by_value' => null,
+			'_order' => 'ID',
+			'_order_meta_key' => null,
+			'_order_meta_value' => null,
 			'_order' => 'ASC'
 		];
 		$options = [];
@@ -56,9 +59,6 @@ class Render {
 	public function render() {
 		
 		$args = $this->config();
-
-
-
 		$header_design = $this->config()['_header_template'];
 		$header = $this->template->template('header', $header_design);
 
